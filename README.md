@@ -1,6 +1,10 @@
 # ViseUtils
 整理的系列基础工具类，包含辅助工具、加密解密、数据转换、IO操作、系统工具等。
 
+- 项目地址：[https://github.com/xiaoyaoyou1212/ViseUtils](https://github.com/xiaoyaoyou1212/ViseUtils)
+
+- 项目引入：`compile project('com.vise.xiaoyaoyou:viseutils:1.0.0')`
+
 ### assist包：
 常用辅助工具类，包含缓存、网络判定、SSL证书、Date工具、String工具等。
 
