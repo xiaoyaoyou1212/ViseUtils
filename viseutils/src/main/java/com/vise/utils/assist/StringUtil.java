@@ -1,9 +1,6 @@
-package com.vise.utils.character;
+package com.vise.utils.assist;
 
 import android.content.Context;
-import android.os.Build;
-
-import org.json.JSONObject;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -11,9 +8,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.nio.charset.Charset;
 import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,38 +21,18 @@ import java.util.zip.GZIPOutputStream;
 
 public class StringUtil {
 
+    public static Pattern numericPattern = Pattern.compile("^[0-9\\-]+$");
     public static final String PHONE_FORMAT = "^((17[0-9])|(13[0-9])|(15[0-3,5-9])|(18[0-9])|(145)|(147))\\d{8}$";
     public static final String EMAIL_FORMAT = "^[0-9a-zA-Z][_.0-9a-zA-Z-]{0,43}@([0-9a-zA-Z][0-9a-zA-Z-]{0," +
             "30}[0-9a-zA-Z].){1,4}[a-zA-Z]{2,4}$";
     public static final String VERIFY_CODE_FORMAT = "^\\d{4}$";
     public static final String PASSWORD_LEGAL_CHARACTERS = "[a-zA-Z0-9]{6,20}";
 
-    private static final String DEFAULT_DATE_PATTERN = "yyyy-MM-dd";
-    private static final String DEFAULT_DATETIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
+    private StringUtil() {
+    }
 
-    private final static ThreadLocal<SimpleDateFormat> dateFormater = new ThreadLocal<SimpleDateFormat>() {
-        @Override
-        protected SimpleDateFormat initialValue() {
-            return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        }
-    };
-
-    private final static ThreadLocal<SimpleDateFormat> dateFormater2 = new ThreadLocal<SimpleDateFormat>() {
-        @Override
-        protected SimpleDateFormat initialValue() {
-            return new SimpleDateFormat("yyyy-MM-dd");
-        }
-    };
-
-    /**
-     * 判断字符串是否为空
-     *
-     * @param str null、“ ”、“null”都返回true
-     * @return boolean
-     */
     public static boolean isNullString(String str) {
-        return (null == str || isBlank(str.trim()) || "null".equals(str.trim()
-                .toLowerCase())) ? true : false;
+        return (null == str || isBlank(str.trim()) || "null".equals(str.trim().toLowerCase())) ? true : false;
     }
 
     public static boolean isEmpty(CharSequence cs) {
@@ -73,6 +48,118 @@ public class StringUtil {
             if (Character.isWhitespace(cs.charAt(i)) == false) {
                 return false;
             }
+        }
+        return true;
+    }
+
+    /**
+     * 判断字符串是否为空或空字符
+     *
+     * @param strSource 源字符串
+     * @return true表示为空，false表示不为空
+     */
+    public static boolean isNull(final String strSource) {
+        return strSource == null || "".equals(strSource.trim());
+    }
+
+    /**
+     * 判断字符串是否为空或空符串。
+     *
+     * @param str 要判断的字符串。
+     * @return String 返回判断的结果。如果指定的字符串为空或空符串，则返回true；否则返回false。
+     */
+    public static boolean isNullOrEmpty(String str) {
+        return (str == null) || (str.trim().length() == 0);
+    }
+
+    /**
+     * 去掉字符串两端的空白字符。因为String类里边的trim()方法不能出现null.trim()的情况，因此这里重新写一个工具方法。
+     *
+     * @param str 要去掉空白的字符串。
+     * @return String 返回去掉空白后的字符串。如果字符串为null，则返回null；否则返回str.trim()。 *
+     */
+    public static String trim(String str) {
+        return str == null ? str : str.trim();
+    }
+
+    /**
+     * 判断参数是否为数字
+     *
+     * @param strNum 待判断的数字参数
+     */
+    public static boolean isNum(final String strNum) {
+        return strNum.matches("^[-+]?(([0-9]+)([.]([0-9]+))?|([.]([0-9]+))?)$");
+    }
+
+    /**
+     * 判断参数是否为手机号.
+     */
+    public static boolean isPhoneNum(final String strPhoneNum) {
+        return Pattern.matches(PHONE_FORMAT, strPhoneNum);
+    }
+
+    /**
+     * 判断是否为正确的邮箱格式
+     *
+     * @param email
+     * @return
+     */
+    public static boolean isEmail(String email) {
+        String str = "^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))" +
+                "([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$";
+        Pattern p = Pattern.compile(str);
+        Matcher m = p.matcher(email);
+        return m.matches();
+    }
+
+    /**
+     * 判断是否是一个IP
+     *
+     * @param IP
+     * @return boolean
+     */
+    public static boolean isIp(String IP) {
+        boolean b = false;
+        IP = trimSpaces(IP);
+        if (IP.matches("\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}")) {
+            String s[] = IP.split("\\.");
+            if (Integer.parseInt(s[0]) < 255)
+                if (Integer.parseInt(s[1]) < 255)
+                    if (Integer.parseInt(s[2]) < 255)
+                        if (Integer.parseInt(s[3]) < 255)
+                            b = true;
+        }
+        return b;
+    }
+
+    /**
+     * 方法: checkPhone
+     * 描述: 提取电话号码
+     *
+     * @param content
+     * @return ArrayList<String>    返回类型
+     */
+    public static ArrayList<String> checkPhone(String content) {
+        ArrayList<String> list = new ArrayList<String>();
+        if (isEmpty(content)) return list;
+        Pattern p = Pattern.compile("1([\\d]{10})|((\\+[0-9]{2,4})?\\(?[0-9]+\\)?-?)?[0-9]{7,8}");
+        Matcher m = p.matcher(content);
+        while (m.find()) {
+            list.add(m.group());
+        }
+        return list;
+    }
+
+    /**
+     * 是否含有表情符
+     * false 为含有表情符
+     */
+    public static boolean checkFace(String checkString) {
+        String reg = "^([a-z]|[A-Z]|[0-9]|[\u0000-\u00FF]|[\u2000-\uFFFF]){1,}$";
+        Pattern pattern = Pattern.compile(reg);
+        Matcher matcher = pattern.matcher(checkString.replaceAll(" ", ""));
+        if (!matcher.matches()) {
+            return false;
         }
         return true;
     }
@@ -104,8 +191,6 @@ public class StringUtil {
         int endindex = path.lastIndexOf(".");
         return path.substring(bingindex + 1, endindex);
     }
-
-    private static Pattern numericPattern = Pattern.compile("^[0-9\\-]+$");
 
     /**
      * 判断字符串是否是数字
@@ -139,7 +224,8 @@ public class StringUtil {
                 buf.append(addZero(str[i], 3));
             }
         }// 加上IP地址
-        buf.append(getTimeStamp());// 加上日期
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+        buf.append(sdf.format(new Date()));// 加上日期
         Random random = new Random();
         for (int i = 0; i < 3; i++) {
             buf.append(random.nextInt(10));// 取三个随机数追加到StringBuffer
@@ -159,6 +245,12 @@ public class StringUtil {
         return getIPTimeRandName(null, fileName);
     }
 
+    /**
+     * 字符串补零
+     * @param str
+     * @param len 多少个零
+     * @return
+     */
     public static String addZero(String str, int len) {
         StringBuffer s = new StringBuffer();
         s.append(str);
@@ -166,16 +258,6 @@ public class StringUtil {
             s.insert(0, "0");
         }
         return s.toString();
-    }
-
-    /**
-     * 获得时间戳 也可以用 ：commons-lang.rar 下的：DateFormatUtils类 更为简单
-     *
-     * @return String
-     */
-    public static String getTimeStamp() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-        return sdf.format(new Date());
     }
 
     /**
@@ -216,68 +298,6 @@ public class StringUtil {
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    /**
-     * 格式化日期字符串 也可以用 ：commons-lang.rar 下的：DateFormatUtils类 更为简单
-     *
-     * @param date
-     * @param pattern
-     * @return String
-     */
-    public static String formatDate(Date date, String pattern) {
-        SimpleDateFormat format = new SimpleDateFormat(pattern);
-        return format.format(date);
-    }
-
-    /**
-     * 格式化日期字符串 也可以用 ：commons-lang.rar 下的：DateFormatUtils类 更为简单
-     */
-    public static String formatDate(Date date) {
-        return formatDate(date, DEFAULT_DATE_PATTERN);
-    }
-
-    /**
-     * 获取当前时间 也可以用 ：commons-lang.rar 下的：DateFormatUtils类 更为简单
-     *
-     * @return String
-     */
-    public static String getDate() {
-        return formatDate(new Date(), DEFAULT_DATE_PATTERN);
-    }
-
-    /**
-     * 获取当前时间
-     *
-     * @return String
-     */
-    public static String getDateTime() {
-        return formatDate(new Date(), DEFAULT_DATETIME_PATTERN);
-    }
-
-    /**
-     * 格式化日期时间字符串
-     */
-    public static String formatDateTime(Date date) {
-        return formatDate(date, DEFAULT_DATETIME_PATTERN);
-    }
-
-    /**
-     * 格式化json格式日期
-     *
-     * @param date
-     * @return String
-     */
-    public static String formatJsonDateTime(JSONObject date) {
-        Date result = null;
-        try {
-            result = new Date(date.getInt("year"), date.getInt("month"),
-                    date.getInt("date"), date.getInt("hours"),
-                    date.getInt("minutes"), date.getInt("seconds"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return result == null ? "" : formatDateTime(result);
     }
 
     /**
@@ -341,7 +361,7 @@ public class StringUtil {
     }
 
     /**
-     * <b>description :</b> 去除特殊字符或将所有中文标号替换为英文标号
+     * 去除特殊字符或将所有中文标号替换为英文标号
      *
      * @param input
      * @return String
@@ -358,12 +378,12 @@ public class StringUtil {
     }
 
     /**
-     * <b>description :</b> 半角字符转全角字符
+     * 半角字符转全角字符
      *
      * @param input
      * @return String
      */
-    public static String ToDBC(String input) {
+    public static String toDBC(String input) {
         if (input == null)
             return null;
         char[] c = input.toCharArray();
@@ -376,30 +396,6 @@ public class StringUtil {
                 c[i] = (char) (c[i] - 65248);
         }
         return new String(c);
-    }
-
-    /**
-     * 判断字符串"oldString"是否为null
-     *
-     * @param oldString 需要判断的字符串
-     * @return String 如果"oldString"为null返回空值"",否则返回"oldString"
-     */
-    public static String getString(String oldString) {
-        if (oldString == null || "null".equals(oldString)) {
-            return "";
-        } else {
-            return oldString.trim();
-        }
-    }
-
-    /**
-     * 将一实数转换成字符串并返回
-     *
-     * @param d 实数
-     * @return String
-     */
-    public static String getString(double d) {
-        return String.valueOf(d);
     }
 
     /**
@@ -419,7 +415,7 @@ public class StringUtil {
      * @param limit  分隔符 例：以“,”分割
      * @return String[] 返回数组，没有返回null
      */
-    public static String[] spilctMoreSelect(String values, String limit) {
+    public static String[] splitMoreSelect(String values, String limit) {
         if (isNullOrEmpty(values)) {
             return null;
         }
@@ -447,35 +443,6 @@ public class StringUtil {
         } else {
             return null;
         }
-    }
-
-    public static int arr2int(String[] arr) {
-        if (arr != null && arr.length > 0) {
-            return Integer.parseInt(arr[1]);
-        }
-        return -1;
-    }
-
-    /**
-     * 判断字符串是否为空或空符串。
-     *
-     * @param str 要判断的字符串。
-     * @return String 返回判断的结果。如果指定的字符串为空或空符串，则返回true；否则返回false。
-     */
-    public static boolean isNullOrEmpty(String str) {
-
-        return (str == null) || (str.trim().length() == 0);
-    }
-
-    /**
-     * 去掉字符串两端的空白字符。因为String类里边的trim()方法不能出现null.trim()的情况，因此这里重新写一个工具方法。
-     *
-     * @param str 要去掉空白的字符串。
-     * @return String 返回去掉空白后的字符串。如果字符串为null，则返回null；否则返回str.trim()。 *
-     */
-    public static String trim(String str) {
-
-        return str == null ? str : str.trim();
     }
 
     /**
@@ -673,40 +640,6 @@ public class StringUtil {
     }
 
     /**
-     * 判断是否是一个IP
-     *
-     * @param IP
-     * @return boolean
-     */
-    public static boolean isIp(String IP) {
-        boolean b = false;
-        IP = trimSpaces(IP);
-        if (IP.matches("\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}")) {
-            String s[] = IP.split("\\.");
-            if (Integer.parseInt(s[0]) < 255)
-                if (Integer.parseInt(s[1]) < 255)
-                    if (Integer.parseInt(s[2]) < 255)
-                        if (Integer.parseInt(s[3]) < 255)
-                            b = true;
-        }
-        return b;
-    }
-
-    /**
-     * 将字符串转位日期类型
-     *
-     * @param sdate
-     * @return Date
-     */
-    public static Date toDate(String sdate) {
-        try {
-            return dateFormater.get().parse(sdate);
-        } catch (ParseException e) {
-            return null;
-        }
-    }
-
-    /**
      * 方法: distanceSize
      * 描述: 计算距离
      *
@@ -740,24 +673,6 @@ public class StringUtil {
     }
 
     /**
-     * 方法: checkPhone
-     * 描述: 提取电话号码
-     *
-     * @param content
-     * @return ArrayList<String>    返回类型
-     */
-    public static ArrayList<String> checkPhone(String content) {
-        ArrayList<String> list = new ArrayList<String>();
-        if (isEmpty(content)) return list;
-        Pattern p = Pattern.compile("1([\\d]{10})|((\\+[0-9]{2,4})?\\(?[0-9]+\\)?-?)?[0-9]{7,8}");
-        Matcher m = p.matcher(content);
-        while (m.find()) {
-            list.add(m.group());
-        }
-        return list;
-    }
-
-    /**
      * <p>描述:保留一位小数</p>
      *
      * @param value
@@ -770,25 +685,11 @@ public class StringUtil {
         return df.format(mvalue);
     }
 
-    public static String parseStr2(String value) {
-        if (StringUtil.isNullString(value)) return "--";
-        DecimalFormat df = new DecimalFormat("######0.0");
-        double mvalue = Double.parseDouble(value);
-        String mStr = df.format(mvalue);
-        if (mStr.equals("0") || mStr.equals("0.0")) {
-            return "--";
-        }
-        return mStr;
-    }
-
     public static String parseStr(double value) {
         if (value == 0) return "0.0";
         DecimalFormat df = new DecimalFormat("######0.0");
         return df.format(Double.parseDouble(String.valueOf(value)));
     }
-
-    private StringUtil() {
-    } // don't instantiate
 
     /**
      * 处理自动换行问题
@@ -796,7 +697,7 @@ public class StringUtil {
      * @param input 字符串
      * @return 设定文件
      */
-    public static String ToWrap(String input) {
+    public static String toWrap(String input) {
         char[] c = input.toCharArray();
         for (int i = 0; i < c.length; i++) {
             if (c[i] == 12288) {
@@ -807,68 +708,6 @@ public class StringUtil {
                 c[i] = (char) (c[i] - 65248);
         }
         return new String(c);
-    }
-
-    /**
-     * 时间显示转换
-     *
-     * @param duration   时间区间 0-59
-     * @param isShowZero 小于10是否显示0 如：09
-     * @return
-     */
-    public static String durationShow(int duration, boolean isShowZero) {
-        String showStr = "";
-        if (isShowZero) {
-            if (duration < 10) {
-                showStr = "0" + String.valueOf(duration);
-            } else {
-                showStr = String.valueOf(duration);
-            }
-        } else {
-            showStr = String.valueOf(duration);
-        }
-        return showStr;
-    }
-
-    public static long fromTimeString(String s) {
-        if (s.lastIndexOf(".") != -1) {
-            s = s.substring(0, s.lastIndexOf("."));
-        }
-        String[] split = s.split(":");
-        if (split.length == 3) {
-            return Long.parseLong(split[0]) * 3600L + Long.parseLong(split[1]) * 60L + Long.parseLong(split[2]);
-        } else if (split.length == 2) {
-            return Long.parseLong(split[0]) * 60L + Long.parseLong(split[0]);
-        } else {
-            throw new IllegalArgumentException("Can\'t parse time string: " + s);
-        }
-    }
-
-    public static String toTimeString(long seconds) {
-        seconds = seconds / 1000;
-        long hours = seconds / 3600L;
-        long remainder = seconds % 3600L;
-        long minutes = remainder / 60L;
-        long secs = remainder % 60L;
-        if (hours == 0) {
-            return (minutes < 10L ? "0" : "") + minutes + ":" + (secs < 10L ? "0" : "") + secs;
-        }
-        return (hours < 10L ? "0" : "") + hours + ":" + (minutes < 10L ? "0" : "") + minutes + ":" + (secs < 10L ?
-                "0" : "") + secs;
-    }
-
-    /**
-     * 是否含有表情符
-     * false 为含有表情符
-     */
-    public static boolean checkFace(String checkString) {
-        String reg = "^([a-z]|[A-Z]|[0-9]|[\u0000-\u00FF]|[\u2000-\uFFFF]){1,}$";
-        Pattern pattern = Pattern.compile(reg);
-        Matcher matcher = pattern.matcher(checkString.replaceAll(" ", ""));
-        if (!matcher.matches()) {
-            return false;
-        }
-        return true;
     }
 
     /**
@@ -905,57 +744,6 @@ public class StringUtil {
     }
 
     /**
-     * 获取设备类型
-     *
-     * @param str
-     * @return
-     */
-    public static String[] getDeviceType(String str) {
-        String[] type = new String[]{"-1", "-1"};
-        if (str == null)
-            return type;
-        if (str.length() >= 3) {
-            String sub = str.substring(str.length() - 3, str.length());
-            if (sub.contains("-")) {
-                type = sub.split("-");
-                if (!isNum(type[0])) {
-                    type[0] = "-1";
-                }
-                if (!isNum(type[1])) {
-                    type[1] = "-1";
-                }
-            } else {
-                return null;
-            }
-        }
-        return type;
-    }
-
-    public static String[] getDeviceType1(String str) {
-        String[] type = new String[]{"-1", "-1"};
-        if (isNull(str))
-            return type;
-        if (str.contains("-")) {
-            String[] tmp = str.split("-");
-            int pos1 = tmp.length - 2;
-            if (pos1 >= 0) {
-                if (isNum(tmp[pos1])) {
-                    type[0] = tmp[pos1];
-                }
-            }
-            int pos2 = tmp.length - 1;
-            if (pos2 > 0) {
-                if (isNum(tmp[pos2])) {
-                    type[1] = tmp[pos2];
-                }
-            }
-        } else {
-            return null;
-        }
-        return type;
-    }
-
-    /**
      * 字节数组转为16进制字符串
      *
      * @param bytes 字节数组
@@ -968,30 +756,6 @@ public class StringUtil {
             fmt.format("%02x", b);
         }
         return fmt.toString();
-    }
-
-    /**
-     * 判断字符串是否为空或空字符
-     *
-     * @param strSource 源字符串
-     * @return true表示为空，false表示不为空
-     */
-    public static boolean isNull(final String strSource) {
-        return strSource == null || "".equals(strSource.trim());
-    }
-
-    /**
-     * 判断是否为正确的邮箱格式
-     *
-     * @param email
-     * @return
-     */
-    public static boolean isEmail(String email) {
-        String str = "^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))" +
-                "([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$";
-        Pattern p = Pattern.compile(str);
-        Matcher m = p.matcher(email);
-        return m.matches();
     }
 
     /**
@@ -1019,22 +783,6 @@ public class StringUtil {
         } catch (Exception e) {
         }
         return defValue;
-    }
-
-    /**
-     * 判断参数是否为数字
-     *
-     * @param strNum 待判断的数字参数
-     */
-    public static boolean isNum(final String strNum) {
-        return strNum.matches("^[-+]?(([0-9]+)([.]([0-9]+))?|([.]([0-9]+))?)$");
-    }
-
-    /**
-     * 判断参数是否为手机号.
-     */
-    public static boolean isPhoneNum(final String strPhoneNum) {
-        return Pattern.matches(PHONE_FORMAT, strPhoneNum);
     }
 
     /**
@@ -1130,17 +878,52 @@ public class StringUtil {
         return result;
     }
 
-    public static byte[] getBytes(String src, Charset charSet) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD) {
-            try {
-                return src.getBytes(charSet.name());
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
+    /**
+     * 时间显示转换
+     *
+     * @param duration   时间区间 0-59
+     * @param isShowZero 小于10是否显示0 如：09
+     * @return
+     */
+    public static String durationShow(int duration, boolean isShowZero) {
+        String showStr = "";
+        if (isShowZero) {
+            if (duration < 10) {
+                showStr = "0" + String.valueOf(duration);
+            } else {
+                showStr = String.valueOf(duration);
             }
-            return null;
         } else {
-            return src.getBytes(charSet);
+            showStr = String.valueOf(duration);
         }
+        return showStr;
+    }
+
+    public static long fromTimeString(String s) {
+        if (s.lastIndexOf(".") != -1) {
+            s = s.substring(0, s.lastIndexOf("."));
+        }
+        String[] split = s.split(":");
+        if (split.length == 3) {
+            return Long.parseLong(split[0]) * 3600L + Long.parseLong(split[1]) * 60L + Long.parseLong(split[2]);
+        } else if (split.length == 2) {
+            return Long.parseLong(split[0]) * 60L + Long.parseLong(split[0]);
+        } else {
+            throw new IllegalArgumentException("Can\'t parse time string: " + s);
+        }
+    }
+
+    public static String toTimeString(long seconds) {
+        seconds = seconds / 1000;
+        long hours = seconds / 3600L;
+        long remainder = seconds % 3600L;
+        long minutes = remainder / 60L;
+        long secs = remainder % 60L;
+        if (hours == 0) {
+            return (minutes < 10L ? "0" : "") + minutes + ":" + (secs < 10L ? "0" : "") + secs;
+        }
+        return (hours < 10L ? "0" : "") + hours + ":" + (minutes < 10L ? "0" : "") + minutes + ":" + (secs < 10L ?
+                "0" : "") + secs;
     }
 
 }

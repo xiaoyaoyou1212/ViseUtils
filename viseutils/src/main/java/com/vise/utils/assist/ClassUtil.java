@@ -1,4 +1,4 @@
-package com.vise.utils;
+package com.vise.utils.assist;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.GenericArrayType;

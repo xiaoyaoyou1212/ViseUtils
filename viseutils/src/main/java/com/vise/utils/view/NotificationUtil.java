@@ -19,7 +19,6 @@ import java.util.ArrayList;
 
 public class NotificationUtil {
     private static int LedID = 0;
-    private static final String TAG = NotificationUtil.class.getSimpleName();
 
     public static void notification(Context context, Uri uri,
                                     int icon, String ticker, String title, String msg) {

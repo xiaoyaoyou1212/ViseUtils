@@ -1,4 +1,4 @@
-package com.vise.utils.character;
+package com.vise.utils.assist;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;

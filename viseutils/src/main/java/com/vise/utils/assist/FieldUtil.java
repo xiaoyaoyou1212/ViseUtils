@@ -1,4 +1,4 @@
-package com.vise.utils.file;
+package com.vise.utils.assist;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;

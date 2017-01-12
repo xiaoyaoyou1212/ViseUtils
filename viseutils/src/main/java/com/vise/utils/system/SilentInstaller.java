@@ -1,14 +1,17 @@
-package com.vise.utils.assist;
+package com.vise.utils.system;
 
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 
 import com.vise.log.ViseLog;
-import com.vise.utils.character.ShellUtil;
+import com.vise.utils.assist.ShellUtil;
 
 import java.io.File;
 
+/**
+ * 静默安装程序
+ */
 public class SilentInstaller {
     /**
      * Installation return code<br/>

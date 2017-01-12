@@ -29,7 +29,6 @@ public class ActivityUtil {
 
     public static void startForwardActivity(Activity context, Class<?> forwardActivity, Boolean isFinish) {
         Intent intent = new Intent(context, forwardActivity);
-        //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         context.startActivity(intent);
         if (isFinish) {
             context.finish();
@@ -39,7 +38,6 @@ public class ActivityUtil {
     public static void startForwardActivity(Activity context, Class<?> forwardActivity, Bundle bundle, Boolean
             isFinish, int animIn, int animOut) {
         Intent intent = new Intent(context, forwardActivity);
-        //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         if (bundle != null)
             intent.putExtras(bundle);
         context.startActivity(intent);
@@ -57,7 +55,6 @@ public class ActivityUtil {
     public static void startForwardActivity(Activity context, Class<?> forwardActivity, Bundle bundle, Boolean
             isFinish) {
         Intent intent = new Intent(context, forwardActivity);
-        //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         if (bundle != null)
             intent.putExtras(bundle);
         context.startActivity(intent);
@@ -69,7 +66,6 @@ public class ActivityUtil {
     public static void startForResultActivity(Activity context, Class<?> forwardActivity, int requestCode, Bundle
             bundle, Boolean isFinish) {
         Intent intent = new Intent(context, forwardActivity);
-        //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         if (bundle != null)
             intent.putExtras(bundle);
         context.startActivityForResult(intent, requestCode);
@@ -81,7 +77,6 @@ public class ActivityUtil {
     public static void startForResultActivity(Activity context, Class<?> forwardActivity, int requestCode, Bundle
             bundle, Boolean isFinish, int animIn, int animOut) {
         Intent intent = new Intent(context, forwardActivity);
-        //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         if (bundle != null)
             intent.putExtras(bundle);
         context.startActivityForResult(intent, requestCode);
@@ -109,8 +104,7 @@ public class ActivityUtil {
         List<ActivityManager.RunningTaskInfo> runningTaskInfo = manager.getRunningTasks(1);
 
         if (runningTaskInfo != null)
-            return (runningTaskInfo.get(0).topActivity.getClassName())
-                    .toString();
+            return (runningTaskInfo.get(0).topActivity.getClassName()).toString();
         else
             return "";
     }

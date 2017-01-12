@@ -14,7 +14,7 @@ public class HandlerUtil {
         HANDLER.postDelayed(runnable, delayMillis);
     }
 
-    public static void removeRunable(Runnable runnable) {
+    public static void removeRunnable(Runnable runnable) {
         HANDLER.removeCallbacks(runnable);
     }
 }

@@ -15,7 +15,7 @@ import android.provider.Settings;
 
 import com.vise.log.ViseLog;
 import com.vise.utils.assist.Check;
-import com.vise.utils.character.ShellUtil;
+import com.vise.utils.assist.ShellUtil;
 
 import java.io.File;
 import java.util.List;

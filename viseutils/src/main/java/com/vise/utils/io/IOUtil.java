@@ -18,7 +18,7 @@ package com.vise.utils.io;
 
 import android.os.Build;
 
-import com.vise.utils.character.StringUtil;
+import com.vise.utils.assist.StringUtil;
 import com.vise.utils.io.stream.ByteArrayOutputStream;
 import com.vise.utils.io.stream.StringBuilderWriter;
 

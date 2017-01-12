@@ -1,4 +1,4 @@
-package com.vise.utils.character;
+package com.vise.utils.assist;
 
 import java.util.Random;
 

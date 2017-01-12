@@ -7,7 +7,7 @@ android {
         minSdkVersion 9
         targetSdkVersion 22
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
     }
     buildTypes {
         release {
@@ -20,3 +20,5 @@ android {
 dependencies {
     compile 'com.vise.xiaoyaoyou:viselog:1.0.0'
 }
+
+apply from: '../bintray.gradle'

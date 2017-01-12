@@ -1,4 +1,4 @@
-package com.vise.utils.encrypt;
+package com.vise.utils.assist;
 
 import java.io.IOException;
 import java.io.InputStream;

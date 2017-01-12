@@ -1,4 +1,4 @@
-package com.vise.utils.file;
+package com.vise.utils.assist;
 
 import android.content.Context;
 import android.graphics.Bitmap;

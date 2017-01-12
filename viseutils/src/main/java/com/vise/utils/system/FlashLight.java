@@ -1,4 +1,4 @@
-package com.vise.utils.assist;
+package com.vise.utils.system;
 
 import android.hardware.Camera;
 import android.os.Build;

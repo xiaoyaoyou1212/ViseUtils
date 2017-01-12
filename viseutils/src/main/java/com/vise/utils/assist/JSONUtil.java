@@ -1,9 +1,8 @@
-package com.vise.utils.character;
+package com.vise.utils.assist;
 
 import android.text.TextUtils;
 
 import com.vise.log.ViseLog;
-import com.vise.utils.assist.Check;
 
 import org.json.JSONArray;
 import org.json.JSONException;
