@@ -1,6 +1,7 @@
 package com.vise.utils.assist;
 
 import android.content.Context;
+import android.os.Build;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -8,6 +9,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -876,6 +878,19 @@ public class StringUtil {
         }
 
         return result;
+    }
+
+    public static byte[] getBytes(String src, Charset charSet) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD) {
+            try {
+                return src.getBytes(charSet.name());
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            return null;
+        } else {
+            return src.getBytes(charSet);
+        }
     }
 
     /**

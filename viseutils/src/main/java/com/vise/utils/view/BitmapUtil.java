@@ -15,9 +15,9 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
+import android.util.Base64;
 
 import com.vise.log.ViseLog;
-import com.vise.utils.assist.Base64;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
