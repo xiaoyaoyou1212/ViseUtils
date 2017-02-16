@@ -21,4 +21,5 @@ dependencies {
     compile 'com.vise.xiaoyaoyou:viselog:1.0.0'
 }
 
-apply from: '../bintray.gradle'
+//apply from: '../bintray.gradle'
+apply from: '../jCenter.gradle'
