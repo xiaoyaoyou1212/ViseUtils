@@ -3,7 +3,7 @@
 
 - 项目地址：[https://github.com/xiaoyaoyou1212/ViseUtils](https://github.com/xiaoyaoyou1212/ViseUtils)
 
-- 项目引入：`compile project('com.vise.xiaoyaoyou:viseutils:1.0.0')`
+- 项目引入：`compile 'com.vise.xiaoyaoyou:viseutils:1.0.0'`
 
 ### QQ交流群
 ![QQ群](http://img.blog.csdn.net/20170327191310083)
