@@ -6,7 +6,11 @@
 - 项目引入：`compile 'com.vise.xiaoyaoyou:viseutils:1.0.0'`
 
 ### QQ交流群
-![QQ群](http://img.blog.csdn.net/20170327191310083)
+![QQ群](https://github.com/xiaoyaoyou1212/XSnow/blob/master/screenshot/qq_chat_first.png)
+(此群已满)
+
+![QQ群](https://github.com/xiaoyaoyou1212/XSnow/blob/master/screenshot/qq_chat_second.png)
+
 
 ### assist包：
 常用辅助工具类，包含缓存、网络判定、SSL证书、Date工具、String工具等。
